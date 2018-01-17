@@ -1,0 +1,2 @@
+module Regret.Game
+    ( ) where
