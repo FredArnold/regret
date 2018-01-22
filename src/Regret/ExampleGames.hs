@@ -1,8 +1,10 @@
 module Regret.ExampleGames
-    ( rps
-    , rps'
+    ( Throw(..)
+    , rps
     , blotto
     , blottoStratRepr
+    , Activity(..)
+    , battleOfSexes
     ) where
 
 import Data.Array
@@ -10,27 +12,25 @@ import Data.Array
 import Regret.Game
     
 
-rps :: Game Int Int
-rps = zeroSumGame (1, 3) (1, 3) rpsPayout
+data Throw
+    = Rock
+    | Paper
+    | Scissors
+      deriving (Eq, Ord, Ix, Show)
 
-rps' :: Game Int Int
-rps' =
-    zeroSumGame (1, 3) (1, 3) $ \x y ->
-                   if (x == 1 && y == 2) || (x == 2 && y == 1) then
-                       2 * rpsPayout x y else
-                       rpsPayout x y
-      
-rpsPayout :: Int -> Int -> Int
-rpsPayout x y
+rps :: Game Throw Throw
+rps =
+    zeroSumGame (Rock, Scissors) (Rock, Scissors) rpsPay
+
+rpsPay :: Throw -> Throw -> Int
+rpsPay x y
     | x == y = 0
-    | x == y+1 = 1
-    | x == 1 && y == 3 = 1
-    | otherwise = -1
-
-rpsRepr :: Int -> String
-rpsRepr 1 = "Rock"
-rpsRepr 2 = "Paper"
-rpsRepr 3 = "Scissors"
+    | otherwise =
+        case (x, y) of
+          (Paper, Rock) -> 1
+          (Scissors, Paper) -> 1
+          (Rock, Scissors) -> 1
+          _ -> -1
 
 blotto :: Game Int Int
 blotto = zeroSumGame (0, 4) (0, 4) blottoPayout
@@ -81,3 +81,24 @@ blottoStratRepr =
     , (3, 1, 1)
     , (2, 2, 1)
     ]
+
+data Activity
+    = Opera
+    | Football
+      deriving (Eq, Ord, Ix, Show)
+
+-- First player is Alice, second player is Bob
+-- strat 0 is Opera, strat 1 is Football
+battleOfSexes :: Game Activity Activity
+battleOfSexes =
+    Game (Opera, Football) (Opera, Football) f g
+    where f = \x y -> case (x, y) of
+                        (Opera, Opera) -> 3
+                        (Opera, Football) -> 1
+                        (Football, Opera) -> 0
+                        (Football, Football) -> 2
+          g = \x y -> case (x, y) of
+                        (Opera, Opera) -> 2
+                        (Opera, Football) -> 1
+                        (Football, Opera) -> 0
+                        (Football, Football) -> 3
