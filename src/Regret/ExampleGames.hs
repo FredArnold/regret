@@ -1,5 +1,6 @@
 module Regret.ExampleGames
     ( rps
+    , rps'
     , blotto
     , blottoStratRepr
     ) where
@@ -10,8 +11,15 @@ import Regret.Game
     
 
 rps :: Game Int Int
-rps = ZSGame (1, 3) (1, 3) rpsPayout
+rps = zeroSumGame (1, 3) (1, 3) rpsPayout
 
+rps' :: Game Int Int
+rps' =
+    zeroSumGame (1, 3) (1, 3) $ \x y ->
+                   if (x == 1 && y == 2) || (x == 2 && y == 1) then
+                       2 * rpsPayout x y else
+                       rpsPayout x y
+      
 rpsPayout :: Int -> Int -> Int
 rpsPayout x y
     | x == y = 0
@@ -25,7 +33,7 @@ rpsRepr 2 = "Paper"
 rpsRepr 3 = "Scissors"
 
 blotto :: Game Int Int
-blotto = ZSGame (0, 4) (0, 4) blottoPayout
+blotto = zeroSumGame (0, 4) (0, 4) blottoPayout
 
 blottoPayout :: Int -> Int -> Int
 blottoPayout x y =

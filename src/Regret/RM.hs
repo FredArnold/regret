@@ -17,7 +17,7 @@ data RMProgress a b
     }
 
 newRMProgress :: (Ix a, Ix b) => Game a b -> RMProgress a b
-newRMProgress (ZSGame boundsA boundsB _) =
+newRMProgress (Game boundsA boundsB _ _) =
     let a = listArray boundsA $ repeat 0
         b = listArray boundsB $ repeat 0
         a' = listArray boundsA $ repeat 0
@@ -42,7 +42,7 @@ randomChoice ((a, n):ps) total
     | otherwise = randomChoice ps $ total - n
 
 iterateRM :: (Ix a, Ix b) => Game a b -> RMProgress a b -> IO (RMProgress a b)
-iterateRM (ZSGame boundsA boundsB f) (RMProgress sumA sumB cumA cumB) = do
+iterateRM (Game boundsA boundsB f g) (RMProgress sumA sumB cumA cumB) = do
     let (profileListA, countA) = stratProfile cumA
         (profileListB, countB) = stratProfile cumB
         sumA' = accum (+) sumA $ normalize profileListA
@@ -53,9 +53,9 @@ iterateRM (ZSGame boundsA boundsB f) (RMProgress sumA sumB cumA cumB) = do
         actionB = randomChoice profileListB $ 1 + (rnd2 `mod` countB)
         result = f actionA actionB
         cumA' = accum (+) cumA [(i, f i actionB - f actionA actionB) | i <- indices cumA]
-        cumB' = accum (+) cumB [(i, f actionA actionB - f actionA i) | i <- indices cumB]
+        cumB' = accum (+) cumB [(i, g actionA i - g actionA actionB) | i <- indices cumB]
     return $ RMProgress sumA' sumB' cumA' cumB'
-
+           
 iterateHelper :: Monad m => (a -> m a) -> Int -> a -> m a
 iterateHelper f n a
     | n <= 0 = return a
