@@ -1,6 +1,7 @@
 module Regret.ExampleGames
     ( Throw(..)
     , rps
+    , sharperScissors
     , blotto
     , blottoStratRepr
     , Activity(..)
@@ -21,6 +22,14 @@ data Throw
 rps :: Game Throw Throw
 rps =
     zeroSumGame (Rock, Scissors) (Rock, Scissors) rpsPay
+
+sharperScissors :: Game Throw Throw
+sharperScissors =
+    zeroSumGame (Rock, Scissors) (Rock, Scissors) $ \x y ->
+        case (x, y) of
+          (Scissors, Paper) -> 2
+          (Paper, Scissors) -> -2
+          (t1, t2) -> rpsPay t1 t2
 
 rpsPay :: Throw -> Throw -> Int
 rpsPay x y
