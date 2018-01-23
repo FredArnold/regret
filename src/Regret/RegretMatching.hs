@@ -63,7 +63,6 @@ iterateRM (Game boundsA boundsB f g) (RMProgress sumA sumB cumA cumB) = do
     rnd2 <- getStdRandom next
     let actionA = randomChoice profileListA $ 1 + (rnd1 `mod` countA)
         actionB = randomChoice profileListB $ 1 + (rnd2 `mod` countB)
-        result = f actionA actionB
         cumA' = accum (+) cumA [(i, f i actionB - f actionA actionB) | i <- indices cumA]
         cumB' = accum (+) cumB [(i, g actionA i - g actionA actionB) | i <- indices cumB]
     return $ RMProgress sumA' sumB' cumA' cumB'
