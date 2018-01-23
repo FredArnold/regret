@@ -1,4 +1,4 @@
-module Regret.RM
+module Regret.RegretMatching
     ( RMProgress(..)
     , newRMProgress
     , extractStrategies
