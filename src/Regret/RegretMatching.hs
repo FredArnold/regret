@@ -3,13 +3,14 @@ module Regret.RegretMatching
     , newRMProgress
     , extractStrategies
     , iterateRM
-    , trainGame
+    , trainRM
     ) where
 
 import Data.Array
 import System.Random
 
 import Regret.Game
+import Regret.ExampleGames (Throw, rps)
 
 
 data RMProgress a b
@@ -63,17 +64,23 @@ iterateRM (Game boundsA boundsB f g) (RMProgress sumA sumB cumA cumB) = do
     rnd2 <- getStdRandom next
     let actionA = randomChoice profileListA $ 1 + (rnd1 `mod` countA)
         actionB = randomChoice profileListB $ 1 + (rnd2 `mod` countB)
-        cumA' = accum (+) cumA [(i, f i actionB - f actionA actionB) | i <- indices cumA]
-        cumB' = accum (+) cumB [(i, g actionA i - g actionA actionB) | i <- indices cumB]
+        cumA' = accum (+) cumA
+                    [ (i, f i actionB - f actionA actionB)
+                    | i <- indices cumA
+                    ]
+        cumB' = accum (+) cumB
+                    [ (i, g actionA i - g actionA actionB)
+                    | i <- indices cumB
+                    ]
     return $ RMProgress sumA' sumB' cumA' cumB'
-           
+
 iterateHelper :: Monad m => (a -> m a) -> Int -> a -> m a
 iterateHelper f n a
     | n <= 0 = return a
     | otherwise = do {a' <- f a; iterateHelper f (n-1) a'}
 
-trainGame :: (Ix a, Ix b) => Game a b -> Int -> IO ([(a, Double)], [(b, Double)])
-trainGame g n = do
+trainRM :: (Ix a, Ix b) => Game a b -> Int -> IO ([(a, Double)], [(b, Double)])
+trainRM g n = do
     let first = newRMProgress g
     rmp <- iterateHelper (iterateRM g) n first
     return $ extractStrategies rmp
