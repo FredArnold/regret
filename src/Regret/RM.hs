@@ -1,5 +1,9 @@
 module Regret.RM
-    (
+    ( RMProgress(..)
+    , newRMProgress
+    , extractStrategies
+    , iterateRM
+    , trainGame
     ) where
 
 import Data.Array
