@@ -9,9 +9,9 @@ runs 10 000 iterations of Regret Matching on Rock Paper Scissors. It might yield
 ... or not - it's random after all.
 # Questions
 ## Why not always choose the strategy with maximum regret?
-This seems simpler to me than randomly choosing between strategies with positive regret. Is there a problem with the approach?
+That flavour of self-play seems too simple to me to not already have a name, but as I don't know how to google it, I will call it Max Regret Self Play here. It seems more obvious to me than randomly choosing between strategies with positive regret, so is there a problem with the approach?
 
-**What I tried:** I implemented this flavour of self-play (`trainMaxregret` in `MaxRegretSelfplay.hs`), a function that runs it on RPS and returns the largest deviation from optimal play (`evalMaxRegretWithRPS`), and a function that does the same for Regret Matching (`evalRegretMatchingWithRPS`). Here are the largest errors for different numbers of iterations:
+**What I tried:** I implemented the algorithm (`trainMaxregret` in `MaxRegretSelfplay.hs`), a function that runs it on RPS and returns the largest deviation from optimal play (`evalMaxRegretWithRPS`), and a function that does the same for Regret Matching (`evalRegretMatchingWithRPS`). Here are the largest errors for different numbers of iterations:
 
 n of iterations | Regret Matching | Max Regret Self Play
 ----------------|-----------------|---------------------
@@ -22,4 +22,4 @@ n of iterations | Regret Matching | Max Regret Self Play
 
 Not a blowout for either algorithm.
 
-There might be games for which Max Regret Self Play does not converge to a Nash equilibrium but Regret Matching does. If you know of such a game, please tell me!
+Maybe the deciding factor is not performance, but convergence. If you know a game for which Regret Matching converges to Nash but Max Regret Self Play does not, please tell me!
