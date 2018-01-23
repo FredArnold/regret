@@ -96,8 +96,6 @@ data Activity
     | Football
       deriving (Eq, Ord, Ix, Show)
 
--- First player is Alice, second player is Bob
--- strat 0 is Opera, strat 1 is Football
 battleOfSexes :: Game Activity Activity
 battleOfSexes =
     Game (Opera, Football) (Opera, Football) f g
