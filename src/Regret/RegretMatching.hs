@@ -28,12 +28,12 @@ newRMProgress (Game boundsA boundsB _ _) =
         b' = listArray boundsB $ repeat 0
     in RMProgress a b a' b'
 
-extractStrategies :: (Ix a, Ix b) => RMProgress a b -> (Array a Double, Array b Double)
+extractStrategies :: (Ix a, Ix b) => RMProgress a b -> ([(a, Double)], [(b, Double)])
 extractStrategies (RMProgress a b _ _) =
     let sumA = sum $ elems a
         sumB = sum $ elems b
-    in ( fmap (/ sumA) a
-       , fmap (/ sumB) b
+    in ( assocs $ fmap (/ sumA) a
+       , assocs $ fmap (/ sumB) b
        )
        
 stratProfile :: Ix i => Array i Int -> ([(i, Int)], Int)
@@ -73,7 +73,7 @@ iterateHelper f n a
     | n <= 0 = return a
     | otherwise = do {a' <- f a; iterateHelper f (n-1) a'}
 
-trainGame :: (Ix a, Ix b) => Game a b -> Int -> IO (Array a Double, Array b Double)
+trainGame :: (Ix a, Ix b) => Game a b -> Int -> IO ([(a, Double)], [(b, Double)])
 trainGame g n = do
     let first = newRMProgress g
     rmp <- iterateHelper (iterateRM g) n first
