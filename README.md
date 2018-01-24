@@ -8,7 +8,7 @@ runs 10 000 iterations of Regret Matching on Rock Paper Scissors. It might yield
 , [(Rock,0.32547598334254607),(Paper,0.32914888670129655),(Scissors,0.3453751299561573)]
 )
 ```
-... or not -- it's random after all.
+... or not --- it's random after all.
 # Questions
 ## Why not always choose the strategy with maximum regret?
 That flavour of self-play seems too simple to me to not already have a name, but as I don't know how to google it, I will call it Max Regret Self Play here. It seems more obvious to me than randomly choosing between strategies with positive regret, so is there a problem with the approach?
