@@ -27,5 +27,6 @@ Not a blowout for either algorithm.
 Maybe the deciding factor is not performance, but convergence. If you know a game for which Regret Matching converges to Nash but Max Regret Self Play does not, please tell me!
 
 # TODO
+- [ ] Simplify code
 - [ ] Switch the implementation to mutable arrays
 - [ ] Move on to the CFR part of the paper
